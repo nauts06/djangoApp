@@ -1,0 +1,26 @@
+# Python Virtual Environments (Aapke venv ko block karega)
+venv/
+env/
+ENV/
+.env/
+
+# Python compiled files (Faltu files cache)
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# Database (Agar aap SQLite database ko push nahi karna chahte)
+*.sqlite3
+
+# Environment Variables / Private Keys
+.env
+*.env
+secret_settings.py
+
+# Media aur Static folders (Jo deployment par alag se aate hain)
+/media/
+/staticfiles/
+
+# Editor settings
+.vscode/
+.idea/
