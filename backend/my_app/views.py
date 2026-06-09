@@ -1,57 +1,29 @@
-from django.shortcuts import render
-
-# Create your views here.
-
-from rest_framework import viewsets
-from .models import Product 
-from .serializer import ProductSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import permission_classes
+
+from .serializers import RegisterSerializer
 
 
-@api_view(['GET' , 'POST'])
-def product(request):
-    if request.method =='GET':
-        products = Product.objects.all()
-        serializer = ProductSerializer(products, many=True)
-        return Response(serializer.data)
-    
-    elif request.method == 'POST':
-        serializer = ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+@api_view(["POST"])
+def register(request):
 
+    # Frontend se data receive
+    serializer = RegisterSerializer(
+        data=request.data
+    )
 
-@api_view(['GET','DELETE'])
-def product_detail(request, id):
-    try:
-        product = Product.objects.get(id=id)
-    
-    except Product.DoesNotExist:
+    # Validation pass?
+    if serializer.is_valid():
+
+        # User create
+        serializer.save()
 
         return Response({
-            "message": "Product not found"
-        })
-    
-    if request.method == 'GET':
-        serializer = ProductSerializer(product)
-        return Response(serializer.data)
-    
-    elif request.method == 'DELETE':
-        product.delete()
-        return Response({
-               "message": "Product deleted"
+            "message": "User Registered Successfully"
         })
 
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def profile(request):
-    return Response({
-        "message": "Welcome Rudra 😎",
-        "user": request.user.username
-    })
+    # Validation failed
+    return Response(
+        serializer.errors,
+        status=400
+    )
