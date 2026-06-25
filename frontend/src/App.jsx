@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 function App() {
 
@@ -209,7 +210,8 @@ function App() {
 //   </div>
 // </div>
 <>
-<Register />
+{/* <Register /> */}
+<Login />
 </>
   );
 }
