@@ -13,7 +13,6 @@ def register(request):
     )
     # Validation pass?
     if serializer.is_valid():
-
         # User create
         serializer.save()
 
@@ -32,15 +31,9 @@ def register(request):
 # Login required
 @permission_classes([IsAuthenticated])
 def profile(request):
-
     return Response({
-
         # Current logged-in user
-
         "id": request.user.id,
-
         "username": request.user.username,
-
         "email": request.user.email
-
     })
