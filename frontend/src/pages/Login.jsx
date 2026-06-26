@@ -10,17 +10,15 @@ function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/token/", {
+      const response = await axios.post("http://127.0.0.1:8001/api/token/", {
         username,
         password,
       });
-
+      
       // Save access token
-
       localStorage.setItem("access", response.data.access);
 
       // Save refresh token
-
       localStorage.setItem("refresh", response.data.refresh);
 
       console.log("Login Success");
