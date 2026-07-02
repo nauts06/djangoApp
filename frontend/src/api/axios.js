@@ -41,33 +41,36 @@ api.interceptors.response.use(
     // Agar response me error hai (401, 404, 500...)
     async (error) => {
 
-        // Sirf 401 Unauthorized handle karenge
-        if (error.response.status === 401) {
 
-            console.log("Access Token Expired");
+        const originalRequest = error.config;
 
-            // Browser se refresh token uthao
-            const refreshToken = localStorage.getItem("refresh");
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
 
-            // Refresh API call karo
-            const response = await axios.post(
-                "http://127.0.0.1:8001/api/token/refresh/",
-                {
-                    refresh: refreshToken
-                }
-            );
+            try {
+                // Browser se refresh token uthao
+                const refreshToken = localStorage.getItem("refresh");
 
-            // Naya access token save karo
-            localStorage.setItem("access",response.data.access);
+                // Refresh API call karo
+                const response = await axios.post(
+                    "http://127.0.0.1:8001/api/token/refresh/",
+                    {
+                        refresh: refreshToken
+                    }
+                );
 
-            // 🔥 YAHI WO LINE HAI JISKE BAARE ME TUM PUCH RAHE THE
+                // Naya access token save karo
+                localStorage.setItem("access", response.data.access);
 
-            console.log("aaaaaaaa",error.config);
+                return api(originalRequest);
+
+            }
+            catch (refreshError) {
+                localStorage.removeItem("access");
+                localStorage.removeItem("refresh");
+                window.location.href = "/login";
+            }
             
-
-            return api(error.config);
-
-
         }
 
         // Agar 401 nahi hai to error waise hi return karo
